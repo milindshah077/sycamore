@@ -265,7 +265,8 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	 */
 	private void initGrid(int size, ColorRGBA color)
 	{
-		grid = new Geometry("wireframe grid", new Grid(size, size, 2f));
+		//grid = new Geometry("wireframe grid", new Grid(size, size, 2f));
+		grid = new Geometry("wireframe grid", new Grid(size+1, size-1, 1f));
 		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		mat.getAdditionalRenderState().setWireframe(true);
 		mat.setColor("Color", color);
