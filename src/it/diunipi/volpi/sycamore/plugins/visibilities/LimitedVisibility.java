@@ -231,7 +231,7 @@ public class LimitedVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "2D Visibility with the shape of a circle.";
+		return "2D Visibility with Only 4 points.";
 	}
 
 	/*
