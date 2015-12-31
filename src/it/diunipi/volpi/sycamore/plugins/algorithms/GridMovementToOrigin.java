@@ -8,24 +8,21 @@ import it.diunipi.volpi.sycamore.engine.Point2D;
 import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
+import it.diunipi.volpi.sycamore.jmescene.SycamoreJMEScene;
 
 import java.util.Vector;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
-import com.jme3.math.FastMath;
 
 /**
  * A simple algorithm where the robot reaches the origin and starts rotating on itself.
  * 
- * @author Valerio Volpi - vale.v@me.com
+ * @author Milind Shah
  */
 @PluginImplementation
 public class GridMovementToOrigin extends AlgorithmImpl<Point2D>
 {
-	private boolean	beginning	= true;
-	private float	angle		= 0;
-
 	/* (non-Javadoc)
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
 	 */
@@ -45,40 +42,30 @@ public class GridMovementToOrigin extends AlgorithmImpl<Point2D>
 	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> caller)
 	{
 		
+		float lower=0, upper=0;
 		Point2D curr=caller.getLocalPosition();
-		
-		if(curr.x < 0 )
+		if(SycamoreJMEScene.gridCentrePoint==false)
+		{
+			lower=-0.5f; upper=0.5f;
+		}
+		if(curr.x < lower )
 		{
 			return new Point2D(curr.x+1, curr.y);
 		}
-		else if(curr.x > 0)
+		else if(curr.x > upper)
 		{
 			return new Point2D(curr.x-1, curr.y);
 		}
 		else
 		{
-			if(curr.y>0)
+			if(curr.y > upper)
 				return new Point2D(curr.x, curr.y - 1);
-			else if (curr.y<0)
+			else if (curr.y < lower)
 				return new Point2D(curr.x, curr.y+1);
 			else
 				return new Point2D(curr.x, curr.y);
 		}
 		
-		/*if (beginning)
-		{
-			beginning = false;
-			return new Point2D(0, 0);
-		}
-		else
-		{
-			Point2D p = new Point2D(FastMath.cos(angle), FastMath.sin(angle));
-			angle += 0.005f;
-
-			caller.setDirection(p);
-			
-			return caller.getLocalPosition();
-		}*/
 	}
 
 	/*
@@ -155,7 +142,7 @@ public class GridMovementToOrigin extends AlgorithmImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "A simple algorithm where the robot reaches the origin through the grid.";
+		return "A simple algorithm where the robot reaches the origin through the grid. In case the origin is not at a grid point, it reaches the closest point surrounding the origin.";
 	}
 
 }

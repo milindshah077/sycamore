@@ -7,12 +7,13 @@ import it.diunipi.volpi.sycamore.engine.Point2D;
 import it.diunipi.volpi.sycamore.engine.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
+import it.diunipi.volpi.sycamore.jmescene.SycamoreJMEScene;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
- * An initial condition where the robots are randomly disposed on the line starting from point (-10,
- * 1) and terminating on point (10, 1).
+ * An initial condition where the robots are randomly disposed only on the grid points in a square  
+ * from (-10, -10) to (10, 10)
  * 
  * @author Milind Shah
  */
@@ -29,6 +30,18 @@ public class Random extends InitialConditionsImpl<Point2D>
 	{
 		float y = SycamoreUtil.getRandomInt(-10, 10);
 		float x = SycamoreUtil.getRandomInt(-10, 10);
+		
+		if(SycamoreJMEScene.gridCentrePoint==false)
+		{
+			if(y>=0)
+				y-=0.5;
+			else
+				y+=0.5;
+			if(x>=0)
+				x-=0.5;
+			else
+				x+=0.5;	
+		}
 
 		return new Point2D(x, y);
 	}
@@ -85,6 +98,6 @@ public class Random extends InitialConditionsImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "An initial condition where the robots are randomly disposed on a grid.";
+		return "An initial condition where the robots are randomly disposed on a grid in a square from (-10, -10) to (10, 10).";
 	}
 }
