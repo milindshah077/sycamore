@@ -121,7 +121,8 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	private HashMap<String, String>					caps				= null;
 	private Vector<java.awt.event.ActionListener>	listeners			= null;
 	private vircaDeviceImpl							vircaDevice			= null;
-
+	public static boolean 							gridCentrePoint     =false;
+	
 	/**
 	 * Default constructor.
 	 */
@@ -265,8 +266,13 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	 */
 	private void initGrid(int size, ColorRGBA color)
 	{
-		//grid = new Geometry("wireframe grid", new Grid(size, size, 2f));
-		grid = new Geometry("wireframe grid", new Grid(size+1, size-1, 1f));
+		gridCentrePoint = true;
+		
+		if(gridCentrePoint)
+			grid = new Geometry("wireframe grid", new Grid(size+1, size-1, 1f));
+		else
+			grid = new Geometry("wireframe grid", new Grid(size, size, 1f));
+	
 		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		mat.getAdditionalRenderState().setWireframe(true);
 		mat.setColor("Color", color);
