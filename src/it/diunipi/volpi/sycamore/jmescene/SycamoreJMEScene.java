@@ -121,7 +121,13 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	private HashMap<String, String>					caps				= null;
 	private Vector<java.awt.event.ActionListener>	listeners			= null;
 	private vircaDeviceImpl							vircaDevice			= null;
-	public static boolean 							gridCentrePoint     =false;
+	
+	//added by Milind Shah
+	public enum GridDimension {
+		EvenEven, OddOdd, EvenOdd, OddEven
+	}
+	
+	public static GridDimension 					gridDimension     	= GridDimension.EvenEven;
 	
 	/**
 	 * Default constructor.
@@ -266,12 +272,23 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	 */
 	private void initGrid(int size, ColorRGBA color)
 	{
-		gridCentrePoint = true;
+		gridDimension = GridDimension.OddEven;
 		
-		if(gridCentrePoint)
-			grid = new Geometry("wireframe grid", new Grid(size+1, size-1, 1f));
-		else
-			grid = new Geometry("wireframe grid", new Grid(size, size, 1f));
+		switch(gridDimension)
+		{
+			case EvenEven :
+				grid = new Geometry("wireframe grid", new Grid(size, size, 1f));
+				break;
+			case OddOdd :
+				grid = new Geometry("wireframe grid", new Grid(size+1, size-1, 1f));
+				break;
+			case EvenOdd :
+				grid = new Geometry("wireframe grid", new Grid(size+1, size, 1f));
+				break;
+			case OddEven : 
+				grid = new Geometry("wireframe grid", new Grid(size, size+1, 1f));
+				break;
+		}
 	
 		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		mat.getAdditionalRenderState().setWireframe(true);

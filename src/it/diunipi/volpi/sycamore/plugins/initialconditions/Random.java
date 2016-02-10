@@ -31,16 +31,31 @@ public class Random extends InitialConditionsImpl<Point2D>
 		float y = SycamoreUtil.getRandomInt(-10, 10);
 		float x = SycamoreUtil.getRandomInt(-10, 10);
 		
-		if(SycamoreJMEScene.gridCentrePoint==false)
+		switch(SycamoreJMEScene.gridDimension)
 		{
-			if(y>=0)
-				y-=0.5;
-			else
-				y+=0.5;
-			if(x>=0)
-				x-=0.5;
-			else
-				x+=0.5;	
+			case EvenEven: 
+				if(y>=0)
+					y-=0.5;
+				else
+					y+=0.5;
+				if(x>=0)
+					x-=0.5;
+				else
+					x+=0.5;	
+				break;
+				
+			case EvenOdd:
+				if(x>=0)
+					x-=0.5;
+				else
+					x+=0.5;	
+				break;
+			case OddEven:
+				if(y>=0)
+					y-=0.5;
+				else
+					y+=0.5;
+				break;
 		}
 
 		return new Point2D(x, y);

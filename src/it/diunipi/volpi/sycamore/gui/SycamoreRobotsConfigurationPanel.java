@@ -354,6 +354,9 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	private JLabel						label_robotsNum				= null;
 	private JLabel						label_speed;
 	private JSpinner					spinner_speed;
+	
+	// for accessing it in GridMovementToOrigin Algo -- added by Milind Shah
+	public static SycamoreEngine		appEngineCopy				= null; 
 
 	/**
 	 * Default constructor.
@@ -1286,6 +1289,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	public void setAppEngine(SycamoreEngine appEngine)
 	{
 		this.appEngine = appEngine;
+		appEngineCopy = appEngine;
 	}
 
 	/*
