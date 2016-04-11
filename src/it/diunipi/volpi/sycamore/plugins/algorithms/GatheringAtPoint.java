@@ -14,6 +14,8 @@ import it.diunipi.volpi.sycamore.engine.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.jmescene.SycamoreJMEScene;
+import it.diunipi.volpi.sycamore.plugins.memory.Memory;
+import it.diunipi.volpi.sycamore.plugins.memory.RequestedDataNotInMemoryException;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,7 +31,7 @@ import it.diunipi.volpi.sycamore.gui.SycamoreRobotsConfigurationPanel;
  * @author Milind Shah
  */
 @PluginImplementation
-public class GridMovementToOrigin extends AlgorithmImpl<Point2D>
+public class GatheringAtPoint extends AlgorithmImpl<Point2D>
 {
 	
 	private static Queue<Point2D> recentPoints=new LinkedList<Point2D>();
@@ -55,7 +57,7 @@ public class GridMovementToOrigin extends AlgorithmImpl<Point2D>
 	@Override
 	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> caller)
 	{
-		SycamoreRobot2D robot=(SycamoreRobot2D)caller;  // caller robot
+		/*SycamoreRobot2D robot=(SycamoreRobot2D)caller;  // caller robot
 		
 		Point2D pos=new Point2D(0,0);                   // destination position
 		Point2D curr=caller.getLocalPosition();         // current position
@@ -64,7 +66,7 @@ public class GridMovementToOrigin extends AlgorithmImpl<Point2D>
 		float lowerX=0, upperX=0, lowerY=0, upperY=0 ;
 		pos.x=curr.x;
 		pos.y=curr.y;
-	
+			
 		synchronized(recentPoints)
 		{
 			if(recentPoints.contains(robot.previousPoint))
@@ -151,6 +153,7 @@ public class GridMovementToOrigin extends AlgorithmImpl<Point2D>
 		{
 			robot.previousPoint=new Point2D();
 			return new Point2D(curr.x, curr.y);
+	
 		}
 		
 		if((pos.x==lowerX && pos.y==lowerY)||(pos.x==lowerX && pos.y==upperY)||(pos.x==upperX && pos.y==lowerY)||(pos.x==upperX && pos.y==upperY))
@@ -185,7 +188,7 @@ public class GridMovementToOrigin extends AlgorithmImpl<Point2D>
 			
 		//}
 		robot.previousPoint=curr;
-		return new Point2D(pos.x,pos.y);
+		*/return new Point2D();
 		
 	}
 

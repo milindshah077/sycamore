@@ -122,7 +122,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	private Vector<java.awt.event.ActionListener>	listeners			= null;
 	private vircaDeviceImpl							vircaDevice			= null;
 	
-	//added by Milind Shah
+	//added by Milind Shah, Sunil Singh
 	public enum GridDimension {
 		EvenEven, OddOdd, EvenOdd, OddEven
 	}
@@ -272,7 +272,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	 */
 	private void initGrid(int size, ColorRGBA color)
 	{
-		gridDimension = GridDimension.OddEven;
+		gridDimension = GridDimension.OddOdd;
 		
 		switch(gridDimension)
 		{

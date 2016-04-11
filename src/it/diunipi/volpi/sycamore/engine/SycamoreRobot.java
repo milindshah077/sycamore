@@ -94,7 +94,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 	private Vector<ActionListener>				listeners			= null;
 
-	// previous point visited--- added by Milind Shah 
+	// previous point visited--- added by Milind Shah, Sunil Singh 
 	public Point2D 								previousPoint		= null;
 	/**
 	 * Default constructor.

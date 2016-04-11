@@ -88,7 +88,7 @@ public class ConsistentCompass2D extends AgreementImpl<Point2D>
 
 	private double								translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
 	private double								translationY	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
-
+	
 	private double								scaleFactor		= SycamoreUtil.getRandomDouble(0.5, 4);
 
 	private ConsistentCompass2DSettingsPanel	panel_settings	= null;
@@ -227,7 +227,7 @@ public class ConsistentCompass2D extends AgreementImpl<Point2D>
 	private AffineTransform computeTransform()
 	{
 		AffineTransform transform = new AffineTransform();
-		transform.translate(translationX, translationY);
+		transform.translate((double)translationX, (double)translationY);
 		transform.rotate(Math.toRadians(getRotation()));
 		transform.scale(getScaleX(), getScaleY());
 

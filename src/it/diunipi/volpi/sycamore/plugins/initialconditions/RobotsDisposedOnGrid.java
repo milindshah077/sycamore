@@ -12,13 +12,13 @@ import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
- * An initial condition where the robots are randomly disposed only on the grid points in a square  
+ * An initial condition where the robots are randomly disposed only on the grid points
  * from (-10, -10) to (10, 10)
  * 
- * @author Milind Shah
+ * @author Milind Shah, Sunil Singh
  */
 @PluginImplementation
-public class Random extends InitialConditionsImpl<Point2D>
+public class RobotsDisposedOnGrid extends InitialConditionsImpl<Point2D>
 {
 	/*
 	 * (non-Javadoc)
@@ -91,7 +91,7 @@ public class Random extends InitialConditionsImpl<Point2D>
 	@Override
 	public String getAuthor()
 	{
-		return "Milind Shah";
+		return "Milind Shah, Sunil Singh";
 	}
 
 	/*
@@ -113,6 +113,6 @@ public class Random extends InitialConditionsImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "An initial condition where the robots are randomly disposed on a grid in a square from (-10, -10) to (10, 10).";
+		return "An initial condition where the robots are randomly disposed on the grid points from (-10, -10) to (10, 10).";
 	}
 }
