@@ -151,7 +151,7 @@ public class GatheringAtPoint extends AlgorithmImpl<Point2D>
 		// check if the robot is already at destination
 		if(targetPos.x==currentPos.x && targetPos.y==currentPos.y)
 		{
-			robot.setAlgorithm(null);
+			//robot.setAlgorithm(null);
 			return currentPos;
 		}
 		
