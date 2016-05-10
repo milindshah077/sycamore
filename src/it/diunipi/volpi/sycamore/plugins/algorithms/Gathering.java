@@ -26,19 +26,13 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import it.diunipi.volpi.sycamore.gui.SycamoreRobotsConfigurationPanel;
 /**
- * A simple algorithm where the robots reach the center or the points surrounding the center avoiding 
+ * A simple algorithm where the robots gather at an undecided point avoiding 
  * collision and only through the grid points.
  * @author Milind Shah, Sunil Singh
  */
 @PluginImplementation
 public class Gathering extends AlgorithmImpl<Point2D>
 {
-	
-	private static Queue<Point2D> recentPoints=new LinkedList<Point2D>();
-	
-	static{
-		recentPoints.clear();
-	}
 	/* (non-Javadoc)
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
 	 */
@@ -47,6 +41,25 @@ public class Gathering extends AlgorithmImpl<Point2D>
 	{
 		// Nothing to do
 	}
+	
+	
+	public static double getDistance(Point2D a, Point2D b)
+	{
+		double dist;
+		dist = Math.pow((a.x-b.x), 2);
+		dist += Math.pow((a.y-b.y), 2);
+		return Math.sqrt(dist);
+	}
+	
+	public static boolean hasReached(Point2D pos, float lowerX, float upperX, float lowerY, float upperY)
+	{
+		if((pos.x==lowerX && pos.y==lowerY)||(pos.x==lowerX && pos.y==upperY)||(pos.x==upperX && pos.y==lowerY)||(pos.x==upperX && pos.y==upperY))
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	
 	/*
 	 * (non-Javadoc)
@@ -57,92 +70,84 @@ public class Gathering extends AlgorithmImpl<Point2D>
 	@Override
 	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> caller)
 	{
-		SycamoreRobot2D robot=(SycamoreRobot2D)caller;      // caller robot
+		SycamoreRobot2D robot=(SycamoreRobot2D)caller;     // caller robot
 		
-		Point2D targetGlobal=new Point2D(0,0);              // target global position
-		Point2D targetLocal=new Point2D(0,0);               // target local position
-		Point2D currentGlobal=robot.getGlobalPosition();    // current global position
-		Point2D currentLocal=robot.getLocalPosition();      // current local position
-		
-		float lowerX=0, upperX=0, lowerY=0, upperY=0 ;
-		
-		targetGlobal.x=currentGlobal.x; targetGlobal.y=currentGlobal.y;
-		targetLocal.x=currentLocal.x; targetLocal.y=currentLocal.y;
+		Point2D targetPos=new Point2D(0,0);              // target position
+		Point2D currentPos=robot.getLocalPosition();    // current position
+		Point2D destPos=new Point2D(0,0);   			// destination position
+	
+		targetPos.x=currentPos.x; targetPos.y=currentPos.y;
+		destPos.x=currentPos.x; destPos.y=currentPos.y;
 			
-		synchronized(recentPoints)
+		Point2D robotPos;
+		
+		// decide the destination point
+		for(Observation<Point2D> obsv : observations)
 		{
-			if(recentPoints.contains(robot.previousPoint))
-				recentPoints.remove(robot.previousPoint);
-		}
-			
-		switch(SycamoreJMEScene.gridDimension)
-		{
-			case EvenEven :
-				lowerX=-0.5f; upperX=0.5f; lowerY=-0.5f; upperY=0.5f;
-				break;
-			case OddOdd :
-				lowerX=0; upperX=0; lowerY=0; upperY=0;
-				break;
-			case EvenOdd :
-				lowerX=-0.5f; upperX=0.5f; lowerY=0; upperY=0;
-				break;
-			case OddEven:
-				lowerX=0; upperX=0; lowerY=-0.5f; upperY=0.5f;
-				break;
+			robotPos=obsv.getRobotPosition();
+			if(Math.round(robotPos.x) > Math.round(destPos.x) )
+			{
+				destPos.x = robotPos.x; destPos.y = robotPos.y; 
+			}
+			else if(Math.round(robotPos.x) == Math.round(destPos.x) && Math.round(robotPos.y) < Math.round(destPos.y))
+			{
+				destPos.x = robotPos.x; destPos.y = robotPos.y;
+			}
+				
 		}
 		
+		// check if the robot is already at destination 
+		if(destPos.equals(currentPos))
+		{
+			robot.setAlgorithm(null);
+			return currentPos;
+		}
+		
+		// decide the next target point
 		switch((int)Math.floor(Math.random()*2))
 		{
 			case 0:
 			{
-				if(currentGlobal.x < lowerX )
+				if(currentPos.x < destPos.x  && (currentPos.x + 1 < destPos.x || currentPos.y >= destPos.y))
 				{
-					targetGlobal.x=currentGlobal.x+1;
-					targetLocal.x=currentLocal.x+1;
+					targetPos.x=currentPos.x+1;
 				}
-				else if(currentGlobal.x > upperX)
+				else if(currentPos.x > destPos.x)
 				{
-					targetGlobal.x=currentGlobal.x-1;
-					targetLocal.x=currentLocal.x-1;
+					targetPos.x=currentPos.x-1;
 				}
 				else
 				{
-					if(currentGlobal.y > upperY)
+					if(currentPos.y > destPos.y)
 					{
-						targetGlobal.y=currentGlobal.y-1;
-						targetLocal.y=currentLocal.y-1;
+						targetPos.y=currentPos.y-1;
 					}
-					else if (currentGlobal.y < lowerY)
+					else if (currentPos.y < destPos.y)
 					{
-						targetGlobal.y=currentGlobal.y+1;
-						targetLocal.y=currentLocal.y+1;
+						targetPos.y=currentPos.y+1;
 					}
 				}
 				break;
 			}
 			case 1:
 			{
-				if(currentGlobal.y > upperY)
+				if(currentPos.y > destPos.y)
 				{
-					targetGlobal.y=currentGlobal.y-1;
-					targetLocal.y=currentLocal.y-1;
+					targetPos.y=currentPos.y-1;
 				}
-				else if (currentGlobal.y < lowerY)
+				else if (currentPos.y < destPos.y)
 				{
-					targetGlobal.y=currentGlobal.y+1;
-					targetLocal.y=currentLocal.y+1;
+					targetPos.y=currentPos.y+1;
 				}
 				else
 				{
-					if(currentGlobal.x < lowerX )
+					if(currentPos.x < destPos.x  && (currentPos.x + 1 < destPos.x || currentPos.y >= destPos.y))
 					{
-						targetGlobal.x=currentGlobal.x+1;
-						targetLocal.x=currentLocal.x+1;
+						targetPos.x=currentPos.x+1;
 					}
-					else if(currentGlobal.x > upperX)
+					else if(currentPos.x > destPos.x)
 					{
-						targetGlobal.x=currentGlobal.x-1;
-						targetLocal.x=currentLocal.x-1;
+						targetPos.x=currentPos.x-1;
 					}
 					
 				}
@@ -150,46 +155,25 @@ public class Gathering extends AlgorithmImpl<Point2D>
 			}
 		}
 		
-		
-		if(targetGlobal.x==currentGlobal.x && targetGlobal.y==currentGlobal.y)
+		// check if the target point is the destination
+		if((targetPos.x==destPos.x && targetPos.y==destPos.y))
 		{
-			robot.previousPoint=new Point2D();
-			return new Point2D(currentLocal.x, currentLocal.y);
-	
+			return targetPos;
 		}
+
+		double myDist = getDistance(currentPos, targetPos);
 		
-		if((targetGlobal.x==lowerX && targetGlobal.y==lowerY)||(targetGlobal.x==lowerX && targetGlobal.y==upperY)||(targetGlobal.x==upperX && targetGlobal.y==lowerY)||(targetGlobal.x==upperX && targetGlobal.y==upperY))
+		// check for collision
+		for(Observation<Point2D> obsv : observations)
 		{
-			robot.previousPoint=currentGlobal;
-			return new Point2D(targetLocal.x,targetLocal.y);
+			robotPos=obsv.getRobotPosition();
+			if(getDistance(robotPos, targetPos) <= myDist &&  !robotPos.equals(destPos) &&  !robotPos.equals(currentPos) )
+			{
+				return currentPos; 
+			}
 		}
-		//synchronized(recentPoints)
-		//{
-			
-			Point2D robotPosition;
-			for(Observation<Point2D> obsv : observations)
-			{
-				robotPosition=obsv.getRobotPosition();
-				if(robotPosition.equals(targetGlobal))
-				{
-					robot.previousPoint=new Point2D();
-					return new Point2D(currentLocal.x, currentLocal.y); 
-				}
-			}
-		
-			synchronized(recentPoints)
-			{
-				if(recentPoints.contains(targetGlobal))
-				{
-					robot.previousPoint=new Point2D();
-					return new Point2D(currentLocal.x, currentLocal.y); 
-				}
-				recentPoints.add(targetGlobal);
-			}
-			
-		//}
-		robot.previousPoint=currentGlobal;
-		return new Point2D(targetLocal.x,targetLocal.y);
+				
+		return targetPos;
 		
 	}
 
@@ -256,7 +240,7 @@ public class Gathering extends AlgorithmImpl<Point2D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "An algorithm for gathering all the robots.";
+		return "An algorithm for gathering all the robots at an undecided point.";
 	}
 
 	/*
@@ -267,7 +251,7 @@ public class Gathering extends AlgorithmImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "A simple algorithm where a robot reaches the center through the grid points avoiding collision. In case the center is not at a grid point, it reaches the closest point surrounding the center.";
+		return "A simple algorithm where a robot gathers at an undecided point avoiding collision. The robots gather at the position of the robot to the extreme right bottom.";
 	}
 
 }
