@@ -94,8 +94,6 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 	private Vector<ActionListener>				listeners			= null;
 
-	// previous point visited--- added by Milind Shah, Sunil Singh 
-	public Point2D 								previousPoint		= null;
 	/**
 	 * Default constructor.
 	 * 
@@ -104,7 +102,6 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	public SycamoreRobot(SycamoreEngine<P> engine, P startingPosition)
 	{
 		this(engine, startingPosition, PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED), ColorRGBA.Red, 0);
-		previousPoint = new Point2D();   //default value
 	}
 
 	/**
