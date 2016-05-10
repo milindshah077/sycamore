@@ -272,7 +272,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	 */
 	private void initGrid(int size, ColorRGBA color)
 	{
-		gridDimension = GridDimension.OddOdd;
+		gridDimension = GridDimension.EvenEven;
 		
 		switch(gridDimension)
 		{
